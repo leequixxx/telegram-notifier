@@ -1,0 +1,25 @@
+{
+    "name": "leequixxx/telegram-notifier",
+    "description": "Telegram notifier",
+    "type": "project",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Misha Vorobeychikov",
+            "email": "mail@leequixxx.space"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "telegram-bot/api": "^2.3.13",
+        "twig/twig": "^3.0.0",
+        "monolog/monolog": "^2.0.1",
+        "rakit/validation": "^1.2.0",
+        "kagatan/ip-api": "^1.0.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

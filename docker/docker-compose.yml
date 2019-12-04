@@ -1,0 +1,27 @@
+version: '3'
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  php:
+    build:
+      context: ./php-fpm
+    volumes:
+      - ../app:/app
+    networks:
+      - backend
+    env_file:
+      - docker-compose.env
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+    - ../app:/app
+    links:
+      - php
+    networks:
+      - backend
+    ports:
+    - 80:80
