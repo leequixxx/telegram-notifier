@@ -15,7 +15,8 @@
         "twig/twig": "^3.0.0",
         "monolog/monolog": "^2.0.1",
         "rakit/validation": "^1.2.0",
-        "kagatan/ip-api": "^1.0.7"
+        "kagatan/ip-api": "^1.0.7",
+        "php-pushover/php-pushover": "dev-master"
     },
     "autoload": {
         "psr-4": {

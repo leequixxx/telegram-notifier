@@ -7,7 +7,7 @@ use App\NotificationRenderer\Renderer;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Exception;
 
-class TelegramNotifier
+class TelegramNotifier implements Notifier
 {
     /**
      * @var LoginInfo $loginInfo
@@ -39,14 +39,14 @@ class TelegramNotifier
 
     /**
      * @param string $userId id of telegram user
-     * @throws Exception
+     * @throws \Exception
      */
     public function sendNotification(string $userId): void
     {
         $message = $this->renderer->render(
           $this->loginInfo->getHost(),
           $this->loginInfo->getServer(),
-          $this->loginInfo->getUser(),
+          $this->loginInfo->getUser()
         );
 
         $this->bot->sendMessage($userId, $message, 'html');

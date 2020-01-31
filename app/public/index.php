@@ -4,12 +4,12 @@ require_once '../vendor/autoload.php';
 
 use App\LoginInfo;
 use App\NotificationRenderer\TwigRenderer;
+use App\PushoverNotifier;
 use App\TelegramNotifier;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Rakit\Validation\Validator;
 use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Exception;
 
 function sendJson(array $response): void
 {
@@ -56,26 +56,41 @@ try {
     }, $userIds);
 
     $bot = new BotApi(env('TELEGRAM_BOT_TOKEN'));
+    $pushover = new Pushover();
+    $pushover->setToken(env('PUSHOVER_TOKEN'));
+
     $renderer = new TwigRenderer();
 
     $log->pushHandler(new StreamHandler('php://stderr', (int) env('LOGGING_LEVEL', Logger::INFO)));
 
-    $notifier = new TelegramNotifier($loginInfo, $bot, $renderer);
+    $telegramNotifier = new TelegramNotifier($loginInfo, $bot, $renderer);
+    $pushoverNotifier = new PushoverNotifier($loginInfo, $pushover, $renderer);
+
 
     $sentToUserIds = [];
 
     foreach ($userIds as $userId) {
         try {
-            $notifier->sendNotification($userId);
+            $telegramNotifier->sendNotification($userId);
 
             $sentToUserIds[] = $userId;
-            $log->debug('Notification sent to user', [
+            $log->debug('Telegram notification sent to user', [
                 'userId' => $userId,
             ]);
         } catch (Exception $exception) {
-            $log->warning('Failed to send notification', [
+            $log->warning('Failed to send telegram notification', [
                 'userId' => $userId,
             ]);
+        }
+    }
+
+    foreach ($userIds as $userId) {
+        try {
+            $pushoverNotifier->sendNotification(env('PUSHOVER_USER'));
+
+            $log->debug('Pushover notification sent to user');
+        } catch (Exception $exception) {
+            $log->warning('Failed to send pushover notification');
         }
     }
 
