@@ -47,8 +47,8 @@ class PushoverNotifier implements Notifier
         $this->pushover->setHtml(1);
         $this->pushover->setTimestamp(time());
         $this->pushover->setTitle('SSH Connection opened');
-
-
         $this->pushover->setMessage($message);
+
+        $this->pushover->send();
     }
 }

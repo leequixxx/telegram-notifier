@@ -84,10 +84,11 @@ try {
         }
     }
 
-    foreach ($userIds as $userId) {
+    foreach ([env('PUSHOVER_USER')] as $userId) {
         try {
-            $pushoverNotifier->sendNotification(env('PUSHOVER_USER'));
+            $pushoverNotifier->sendNotification($userId);
 
+            $sentToUserIds[] = $userId;
             $log->debug('Pushover notification sent to user');
         } catch (Exception $exception) {
             $log->warning('Failed to send pushover notification');
@@ -102,7 +103,7 @@ try {
         ],
         'error' => null
     ];
-    if (count($userIds) === count($sentToUserIds)) {
+    if (count($userIds) + 1 === count($sentToUserIds)) {
         if (empty($userIds)) {
             $log->info('Noting to send', $logContext);
             $response['data']['message'] = 'Nothing to send';
